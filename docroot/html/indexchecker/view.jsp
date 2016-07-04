@@ -35,7 +35,7 @@
 <%@ page import="com.liferay.portal.kernel.log.Log" %>
 <%@ page import="com.liferay.portal.kernel.util.ParamUtil" %>
 <%@ page import="com.liferay.portal.kernel.util.Validator" %>
-<%@ page import="com.liferay.portal.model.Company" %>
+<%@ page import="com.liferay.portal.kernel.model.Company" %>
 
 <%@ page import="java.util.EnumSet" %>
 <%@ page import="java.util.List" %>
@@ -74,29 +74,29 @@
 
 <aui:form action="<%= executeCheckURL %>" method="POST" name="fm">
 	<aui:fieldset>
-		<aui:column>
+		<aui:col>
 			<aui:select name="outputFormat">
 				<aui:option selected="true" value="Table"><liferay-ui:message key="output-format-table" /></aui:option>
 				<aui:option value="CSV"><liferay-ui:message key="output-format-csv" /></aui:option>
 			</aui:select>
 			<aui:input helpMessage="filter-class-name-help" name="filterClassName" onClick='<%= renderResponse.getNamespace() + "disableReindexAndRemoveOrphansButtons(this);" %>' type="text" value="" />
-		</aui:column>
-		<aui:column>
+		</aui:col>
+		<aui:col>
 			<aui:input helpMessage="output-both-exact-help" name="outputBothExact" onClick='<%= renderResponse.getNamespace() + "disableReindexAndRemoveOrphansButtons(this);" %>' type="checkbox" value="false" />
 			<aui:input helpMessage="output-both-not-exact-help" name="outputBothNotExact" onClick='<%= renderResponse.getNamespace() + "disableReindexAndRemoveOrphansButtons(this);" %>' type="checkbox" value="true" />
 			<aui:input helpMessage="output-liferay-help" name="outputLiferay" onClick='<%= renderResponse.getNamespace() + "disableReindexAndRemoveOrphansButtons(this);" %>' type="checkbox" value="true" />
 			<aui:input helpMessage="output-index-help" name="outputIndex" onClick='<%= renderResponse.getNamespace() + "disableReindexAndRemoveOrphansButtons(this);" %>' type="checkbox" value="false" />
-		</aui:column>
-		<aui:column>
+		</aui:col>
+		<aui:col>
 			<aui:input name="outputGroupBySite" onClick='<%= renderResponse.getNamespace() + "toogleFilterGroupId(this);" %>' type="checkbox" value="false" />
 			<span class="<%= (ParamUtil.getBoolean(request, "outputGroupBySite") ? "" : "hide") %>" id="filterGroupIdSpan">
 			<aui:input helpMessage="filter-group-id-help" name="filterGroupId" onClick='<%= renderResponse.getNamespace() + "disableReindexAndRemoveOrphansButtons(this);" %>' type="text" value='<%=request.getAttribute("filterGroupId") %>' />
 			</span>
 			<aui:input name="dumpAllObjectsToLog" type="checkbox" value="false" />
-		</aui:column>
-		<aui:column>
+		</aui:col>
+		<aui:col>
 			<aui:input helpMessage="number-of-threads-help" name="numberOfThreads" type="text" value='<%= request.getAttribute("numberOfThreads") %>' />
-		</aui:column>
+		</aui:col>
 	</aui:fieldset>
 
 	<aui:button-row>
