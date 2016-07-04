@@ -694,6 +694,10 @@ public class IndexCheckerPortlet extends MVCPortlet {
 
 		Model model = modelFactory.getModelObject(Group.class);
 
+		if (model == null) {
+			return new ArrayList<Long>();
+		}
+
 		DynamicQuery groupDynamicQuery = model.getService().newDynamicQuery();
 
 		Conjunction stagingSites = RestrictionsFactoryUtil.conjunction();
