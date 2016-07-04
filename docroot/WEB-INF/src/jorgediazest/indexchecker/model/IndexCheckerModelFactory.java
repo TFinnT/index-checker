@@ -33,7 +33,7 @@ public class IndexCheckerModelFactory extends ModelFactory {
 
 	static {
 		modelClassMap.put(
-			"com.liferay.portlet.asset.model.AssetEntry", NotIndexed.class);
+			"com.liferay.asset.kernel.model.AssetEntry", NotIndexed.class);
 		modelClassMap.put(
 			"com.liferay.portlet.calendar.model.CalendarBooking",
 			CalendarBooking.class);

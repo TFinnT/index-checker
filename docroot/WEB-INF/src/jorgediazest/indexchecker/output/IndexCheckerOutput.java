@@ -24,14 +24,15 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.Company;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -57,6 +58,9 @@ public class IndexCheckerOutput {
 		Map<Company, String> companyError) {
 
 		List<String> out = new ArrayList<String>();
+
+		ResourceBundle resourceBundle = portletConfig.getResourceBundle(
+				locale);
 
 		if (companyResultDataMap != null) {
 			String[] headerKeys;
@@ -110,10 +114,10 @@ public class IndexCheckerOutput {
 
 							if (group == null) {
 								groupIdOutput = LanguageUtil.get(
-									portletConfig, locale,
+									resourceBundle,
 									"output.not-applicable-groupid");
 								groupNameOutput = LanguageUtil.get(
-									portletConfig, locale,
+									resourceBundle,
 									"output.not-applicable-groupname");
 							}
 							else {
@@ -128,7 +132,7 @@ public class IndexCheckerOutput {
 
 					for (Comparison comp : entry.getValue()) {
 						String lineError = generateCSVRow(
-							portletConfig, comp, companyOutput, groupIdOutput,
+							resourceBundle, comp, companyOutput, groupIdOutput,
 							groupNameOutput, "error", locale, comp.getError(),
 							"");
 
@@ -139,7 +143,7 @@ public class IndexCheckerOutput {
 
 						for (String type : comp.getOutputTypes()) {
 							String line = generateCSVRow(
-									portletConfig, comp, companyOutput,
+									resourceBundle, comp, companyOutput,
 									groupIdOutput, groupNameOutput, type,
 									locale);
 
@@ -185,6 +189,9 @@ public class IndexCheckerOutput {
 
 		Locale locale = renderRequest.getLocale();
 
+		ResourceBundle resourceBundle = portletConfig.getResourceBundle(
+				locale);
+
 		String[] headerKeys;
 
 		if (groupBySite) {
@@ -221,9 +228,9 @@ public class IndexCheckerOutput {
 
 				if (group == null) {
 					groupIdOutput = LanguageUtil.get(
-						portletConfig, locale, "output.not-applicable-groupid");
+						resourceBundle, "output.not-applicable-groupid");
 					groupNameOutput = LanguageUtil.get(
-						portletConfig, locale,
+						resourceBundle,
 						"output.not-applicable-groupname");
 				}
 				else {
@@ -249,7 +256,7 @@ public class IndexCheckerOutput {
 
 			for (Comparison comp : entry.getValue()) {
 				ResultRow rowError = generateSearchContainerRow(
-					portletConfig, comp, groupIdOutput, groupNameOutput,
+					resourceBundle, comp, groupIdOutput, groupNameOutput,
 					"error", locale, numberOfRows, comp.getError(), "");
 
 				if (rowError != null) {
@@ -259,7 +266,7 @@ public class IndexCheckerOutput {
 
 				for (String type : comp.getOutputTypes()) {
 					ResultRow row = generateSearchContainerRow(
-						portletConfig, comp, groupIdOutput, groupNameOutput,
+						resourceBundle, comp, groupIdOutput, groupNameOutput,
 						type, locale, numberOfRows);
 
 					if (row != null) {
@@ -278,7 +285,7 @@ public class IndexCheckerOutput {
 	static Log _log = LogFactoryUtil.getLog(IndexCheckerOutput.class);
 
 	protected static String generateCSVRow(
-		PortletConfig portletConfig, Comparison comp, String companyOutput,
+		ResourceBundle resourceBundle, Comparison comp, String companyOutput,
 		String groupIdOutput, String groupNameOutput, String type,
 		Locale locale) {
 
@@ -298,12 +305,12 @@ public class IndexCheckerOutput {
 		String outputSize = "" + data.size();
 
 		return generateCSVRow(
-			portletConfig, comp, companyOutput, groupIdOutput, groupNameOutput,
+			resourceBundle, comp, companyOutput, groupIdOutput, groupNameOutput,
 			type, locale, output, outputSize);
 	}
 
 	protected static String generateCSVRow(
-		PortletConfig portletConfig, Comparison comp, String companyOutput,
+		ResourceBundle resourceBundle, Comparison comp, String companyOutput,
 		String groupIdOutput, String groupNameOutput, String type,
 		Locale locale, String output, String outputSize) {
 
@@ -326,14 +333,14 @@ public class IndexCheckerOutput {
 
 		line.add(modelOutput);
 		line.add(modelDisplayNameOutput);
-		line.add(LanguageUtil.get(portletConfig, locale, "output." + type));
+		line.add(LanguageUtil.get(resourceBundle, "output." + type));
 		line.add(outputSize);
 		line.add(output);
 		return OutputUtils.getCSVRow(line);
 	}
 
 	protected static ResultRow generateSearchContainerRow(
-		PortletConfig portletConfig, Comparison comp, String groupIdOutput,
+		ResourceBundle resourceBundle, Comparison comp, String groupIdOutput,
 		String groupNameOutput, String type, Locale locale, int numberOfRows) {
 
 		Set<Data> data = comp.getData(type);
@@ -352,12 +359,12 @@ public class IndexCheckerOutput {
 		String outputSize = ""+data.size();
 
 		return generateSearchContainerRow(
-			portletConfig, comp, groupIdOutput, groupNameOutput, type, locale,
+			resourceBundle, comp, groupIdOutput, groupNameOutput, type, locale,
 			numberOfRows, output, outputSize);
 	}
 
 	protected static ResultRow generateSearchContainerRow(
-		PortletConfig portletConfig, Comparison comp, String groupIdOutput,
+		ResourceBundle resourceBundle, Comparison comp, String groupIdOutput,
 		String groupNameOutput, String type, Locale locale, int numberOfRows,
 		String output, String outputSize) {
 
@@ -365,7 +372,7 @@ public class IndexCheckerOutput {
 			return null;
 		}
 
-		ResultRow row = new ResultRow(comp, type, numberOfRows);
+		ResultRow row = new com.liferay.taglib.search.ResultRow(comp, type, numberOfRows);
 		Model model = comp.getModel();
 
 		String modelOutput = model.getName();
@@ -381,7 +388,7 @@ public class IndexCheckerOutput {
 		row.addText(
 			HtmlUtil.escape(
 				LanguageUtil.get(
-					portletConfig, locale, "output." + type)).replace(
+					resourceBundle, "output." + type)).replace(
 						" ", "&nbsp;"));
 		row.addText(HtmlUtil.escape(outputSize));
 		row.addText(HtmlUtil.escape(output));

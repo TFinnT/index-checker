@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.dao.orm.Disjunction;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil;
-import com.liferay.portal.kernel.dao.shard.ShardUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -27,18 +26,16 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.model.Company;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.User;
-import com.liferay.portal.security.auth.CompanyThreadLocal;
-import com.liferay.portal.service.ClassNameLocalServiceUtil;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.journal.model.JournalArticle;
-import com.liferay.portlet.wiki.model.WikiPage;
-import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
+import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.util.portlet.PortletProps;
 
 import java.io.IOException;
@@ -146,7 +143,7 @@ public class IndexCheckerPortlet extends MVCPortlet {
 
 			@Override
 			public DataComparator getDataComparator(Model model) {
-				if (JournalArticle.class.getName().equals(
+				if ("com.liferay.journal.model.JournalArticle".equals(
 						model.getClassName()) && indexAllVersions) {
 
 					return defaultComparator;
@@ -159,7 +156,7 @@ public class IndexCheckerPortlet extends MVCPortlet {
 
 					return dlFileEntryComparator;
 				}
-				else if (WikiPage.class.getName().equals(
+				else if ("com.liferay.wiki.model.WikiPage".equals(
 							model.getClassName())) {
 
 					return wikiPageComparator;
@@ -372,8 +369,6 @@ public class IndexCheckerPortlet extends MVCPortlet {
 			try {
 				CompanyThreadLocal.setCompanyId(company.getCompanyId());
 
-				ShardUtil.pushCompanyService(company.getCompanyId());
-
 				List<String> classNames = getClassNames(filterClassNameArr);
 
 				List<Long> groupIds = getGroupIds(company, filterGroupIdArr);
@@ -410,9 +405,6 @@ public class IndexCheckerPortlet extends MVCPortlet {
 				t.printStackTrace(pwt);
 				companyError.put(company, swt.toString());
 				_log.error(t, t);
-			}
-			finally {
-				ShardUtil.popCompanyService();
 			}
 		}
 
@@ -457,8 +449,6 @@ public class IndexCheckerPortlet extends MVCPortlet {
 			PrintWriter pw = new PrintWriter(sw);
 
 			try {
-				ShardUtil.pushCompanyService(company.getCompanyId());
-
 				List<String> classNames = getClassNames(filterClassNameArr);
 
 				List<Long> groupIds = getGroupIds(company, filterGroupIdArr);
@@ -510,9 +500,6 @@ public class IndexCheckerPortlet extends MVCPortlet {
 				companyError.put(company, swt.toString());
 				_log.error(t, t);
 			}
-			finally {
-				ShardUtil.popCompanyService();
-			}
 
 			companyError.put(company, sw.toString());
 		}
@@ -558,8 +545,6 @@ public class IndexCheckerPortlet extends MVCPortlet {
 			PrintWriter pw = new PrintWriter(sw);
 
 			try {
-				ShardUtil.pushCompanyService(company.getCompanyId());
-
 				List<String> classNames = getClassNames(filterClassNameArr);
 
 				List<Long> groupIds = getGroupIds(company, filterGroupIdArr);
@@ -610,9 +595,6 @@ public class IndexCheckerPortlet extends MVCPortlet {
 				t.printStackTrace(pwt);
 				companyError.put(company, swt.toString());
 				_log.error(t, t);
-			}
-			finally {
-				ShardUtil.popCompanyService();
 			}
 
 			companyError.put(company, sw.toString());

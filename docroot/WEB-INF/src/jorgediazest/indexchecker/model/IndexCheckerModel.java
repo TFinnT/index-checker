@@ -103,7 +103,7 @@ public class IndexCheckerModel extends ModelImpl {
 	public void fillDataObject(Data data, String[] attributes, Document doc) {
 		data.set("uid", doc.getUID());
 
-		Locale[] locales = LanguageUtil.getAvailableLocales();
+		Set<Locale> locales = LanguageUtil.getAvailableLocales();
 		Locale siteLocale = LocaleUtil.getSiteDefault();
 
 		for (String attribute : attributes) {
@@ -118,7 +118,7 @@ public class IndexCheckerModel extends ModelImpl {
 				typeClass.equals(Object.class)) {
 
 				listValueMap = IndexSearchUtil.getLocalizedMap(
-					locales, doc, attrDoc);
+					locales.toArray(new Locale[0]), doc, attrDoc);
 			}
 
 			if ((listValueMap != null) && !listValueMap.isEmpty()) {
